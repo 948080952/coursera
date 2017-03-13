@@ -31,7 +31,11 @@ public class FastCollinearPoints {
             int startIndex = 1;
             double slope = origin.slopeTo(sortedPoint[startIndex]);
 
+            validateSlope(slope);
+
             for (int j = 2; j < length; j++) {
+
+                validateSlope(origin.slopeTo(sortedPoint[j]));
 
                 if (slope != origin.slopeTo(sortedPoint[j]) || j == length - 1) {
                     int matchCount = j - startIndex;
@@ -96,6 +100,12 @@ public class FastCollinearPoints {
         return segments;
 
 
+    }
+
+    private void validateSlope(double slope) {
+        if (slope == Double.NEGATIVE_INFINITY) {
+            throw new java.lang.IllegalArgumentException("repeated point");
+        }
     }
 
     private LineSegment generateSegment(Point[] points) {
