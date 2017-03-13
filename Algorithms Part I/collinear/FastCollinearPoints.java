@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 public class FastCollinearPoints {
 
-    int segmentCount = 0;
-    LineSegment[] segments;
+    private int segmentCount = 0;
+    private LineSegment[] segments;
 
     public FastCollinearPoints(Point[] points) {
 
@@ -33,13 +33,19 @@ public class FastCollinearPoints {
 
             for (int j = 2; j < length; j++) {
 
-                if (slope != origin.slopeTo(sortedPoint[j])) {
-                    if (j - startIndex > 1) {
-                        Point[] linearPoints = new Point[j - startIndex + 1];
-                        for (int k = startIndex; k < j - startIndex; k++) {
-                            linearPoints[k] = sortedPoint[k];
+                if (slope != origin.slopeTo(sortedPoint[j]) || j == length - 1) {
+                    int matchCount = j - startIndex;
+                    if (j == length -1) {
+                        matchCount++;
+                    }
+                    if (matchCount > 2) {
+                        Point[] linearPoints = new Point[matchCount + 1];
+                        for (int k = 0; k < matchCount; k++) {
+                            validate(sortedPoint[k + startIndex]);
+                            linearPoints[k] = sortedPoint[k + startIndex];
                         }
-                        linearPoints[j - startIndex] = origin;
+                        validate(origin);
+                        linearPoints[matchCount] = origin;
                         current.value = generateSegment(linearPoints);
                         current.next = new segmentNode();
                         current = current.next;
@@ -48,21 +54,35 @@ public class FastCollinearPoints {
                     slope = origin.slopeTo(sortedPoint[j]);
                     startIndex = j;
                 }
+
             }
         }
 
         current = firstNode;
         segments = new LineSegment[segmentCount];
 
-        for (int i = 0; i < segmentCount; i++) {
-
-            segments[i] = current.value;
+        int realCount = 0;
+        while (current.value != null) {
+            boolean haveAdded = false;
+            for (int i = realCount - 1; i >= 0; i--) {
+                LineSegment segment = segments[i];
+                if (segment.toString().equals(current.value.toString())) {
+                    haveAdded = true;
+                }
+            }
+            if (!haveAdded) {
+                segments[realCount] = current.value;
+                realCount++;
+            }
             current = current.next;
-
         }
+        segmentCount = realCount;
 
-
-
+        LineSegment[] realSegments = new LineSegment[segmentCount];
+        for (int i = 0; i < segmentCount; i++) {
+            realSegments[i] = segments[i];
+        }
+        segments = realSegments;
     }
 
     public int numberOfSegments() {
@@ -87,6 +107,14 @@ public class FastCollinearPoints {
         return new LineSegment(points[0], points[length - 1]);
 
     }
+
+
+    private void validate(Point point) {
+        if (point == null) {
+            throw new java.lang.NullPointerException("the point can't be null");
+        }
+    }
+
 
     private class segmentNode {
         LineSegment value;
@@ -117,14 +145,11 @@ public class FastCollinearPoints {
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
-            StdOut.println(segment);
+//            StdOut.println(segment);
             segment.draw();
         }
         StdDraw.show();
 
-
     }
-
-
 
 }

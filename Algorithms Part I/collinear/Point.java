@@ -158,15 +158,14 @@ public class Point implements Comparable<Point> {
     public static void main(String[] args) {
         /* YOUR CODE HERE */
 
-        Point one = new Point(0, 0);
-        Point two = new Point(0, 0);
+        Point one = new Point(0, 1);
+        Point two = new Point(0, 2);
+        Point thr = new Point(0, 3);
 
-        if (one.compareTo(two) > 0) {
-            System.out.println("one is bigger than two");
-        } else if (one.compareTo(two) < 0){
-            System.out.println("one is smaller than two");
+        if (one.slopeTo(two) == one.slopeTo(thr)) {
+            System.out.println("yes");
         } else {
-            System.out.println("equal");
+            System.out.println("no");
         }
 
     }

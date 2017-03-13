@@ -3,8 +3,8 @@ import edu.princeton.cs.algs4.*;
 
 public class BruteCollinearPoints {
 
-    int segmentCount = 0;
-    LineSegment[] segments;
+    private int segmentCount = 0;
+    private LineSegment[] segments;
 
 
     public BruteCollinearPoints(Point[] points) {
