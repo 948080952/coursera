@@ -39,7 +39,7 @@ public class FastCollinearPoints {
 
                 if (slope != origin.slopeTo(sortedPoint[j]) || j == length - 1) {
                     int matchCount = j - startIndex;
-                    if (j == length -1) {
+                    if (j == length - 1 && slope == origin.slopeTo(sortedPoint[j])) {
                         matchCount++;
                     }
                     if (matchCount > 2) {
@@ -87,6 +87,12 @@ public class FastCollinearPoints {
             realSegments[i] = segments[i];
         }
         segments = realSegments;
+
+//        Point origin = points[59];
+//        Arrays.sort(sortedPoint, origin.slopeOrder());
+//        for (Point point : sortedPoint) {
+//            System.out.println(point.x + "," + point.y);
+//        }
     }
 
     public int numberOfSegments() {
@@ -155,7 +161,7 @@ public class FastCollinearPoints {
         // print and draw the line segments
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
-//            StdOut.println(segment);
+            StdOut.println(segment);
             segment.draw();
         }
         StdDraw.show();
