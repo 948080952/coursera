@@ -51,8 +51,8 @@ public class Point implements Comparable<Point> {
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
 
-        int distanceX = that.x - that.x;
-        int distanceY = that.y - that.y;
+        double distanceX = that.x - this.x;
+        double distanceY = that.y - this.y;
 
         if (distanceX == 0 && distanceY == 0) {
             return Double.NEGATIVE_INFINITY;
