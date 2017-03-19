@@ -1,4 +1,6 @@
-
+/**
+ * Created by daipei on 2017/3/19.
+ */
 import java.util.Iterator;
 import edu.princeton.cs.algs4.*;
 
@@ -16,9 +18,9 @@ public class Deque<Item> implements Iterable<Item> {
 
     public Deque() {
 
-       this.size = 0;
-       this.first = null;
-       this.last = null;
+        this.size = 0;
+        this.first = null;
+        this.last = null;
     }
 
 
@@ -29,15 +31,15 @@ public class Deque<Item> implements Iterable<Item> {
         }
         return false;
 
-	}
+    }
 
-	public int size() {
+    public int size() {
 
         return size;
 
-	}
+    }
 
-	public void addFirst(Item item) {
+    public void addFirst(Item item) {
 
         validate(item);
 
@@ -58,7 +60,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     }
 
-	public void addLast(Item item) {
+    public void addLast(Item item) {
 
         validate(item);
 
@@ -78,8 +80,8 @@ public class Deque<Item> implements Iterable<Item> {
         size++;
 
     }
-		
-	public Item removeFirst() {
+
+    public Item removeFirst() {
         if (size == 0) {
             throw new java.util.NoSuchElementException();
         }
@@ -93,9 +95,9 @@ public class Deque<Item> implements Iterable<Item> {
         }
         size--;
         return oldNode.item;
-	}
+    }
 
-	public Item removeLast() {
+    public Item removeLast() {
         if (size == 0) {
             throw new java.util.NoSuchElementException();
         }
@@ -110,38 +112,38 @@ public class Deque<Item> implements Iterable<Item> {
         size--;
         return oldNode.item;
 
-	}
+    }
 
-	public Iterator<Item> iterator() {
+    public Iterator<Item> iterator() {
         return new MyIterator();
     }
-		
-	private class MyIterator implements Iterator<Item> {
+
+    private class MyIterator implements Iterator<Item> {
 
         private Node current = first;
-				
-		public boolean hasNext() {
-		    return current != null;
-		}
 
-		public Item next() {
-		    if (!hasNext()) {
-		        throw new java.util.NoSuchElementException();
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public Item next() {
+            if (!hasNext()) {
+                throw new java.util.NoSuchElementException();
             }
-		    Item item = current.item;
-		    current = current.next;
-		    return item;
-		}
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
 
-		public void remove() {
-						
-			throw new java.lang.UnsupportedOperationException();
+        public void remove() {
 
-		}
+            throw new java.lang.UnsupportedOperationException();
 
-	}
+        }
 
-	private void validate(Item item) {
+    }
+
+    private void validate(Item item) {
         if (item == null) {
             throw new java.lang.NullPointerException();
         }
@@ -175,4 +177,4 @@ public class Deque<Item> implements Iterable<Item> {
 
     }
 
-} 
+}
