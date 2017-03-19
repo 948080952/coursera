@@ -103,7 +103,7 @@ public class Board {
                 return new Iterator<Board>() {
                     @Override
                     public boolean hasNext() {
-                        if (currentNode != null) {
+                        if (currentNode.value != null) {
                             return true;
                         }
                         return false;
@@ -182,7 +182,6 @@ public class Board {
             newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
             newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
             currentNode.value = new Board(newBlocks);
-
         }
     }
 
@@ -221,6 +220,13 @@ public class Board {
             System.out.println("is goal");
         } else {
             System.out.println("not goal");
+        }
+
+        System.out.println("neighbors:");
+
+        for (Board board :
+                initial.neighbors()) {
+            System.out.println(board.toString());
         }
 
     }
