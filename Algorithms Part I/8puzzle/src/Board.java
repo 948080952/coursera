@@ -1,8 +1,10 @@
 import java.util.Iterator;
+import edu.princeton.cs.algs4.In;
 
 /**
  * Created by daipei on 2017/3/19.
  */
+
 public class Board {
 
     private int[][] blocks;
@@ -17,7 +19,7 @@ public class Board {
     public Board(int[][] blocks) {
 
         this.blocks = blocks;
-        this.dimension = (int) Math.sqrt(blocks.length);
+        this.dimension = blocks.length;
 
         StringBuilder sb = new StringBuilder();
 
@@ -26,8 +28,13 @@ public class Board {
             for (int j = 0; j < dimension; j++) {
                 int value = blocks[i][j];
                 twinBlocks[i][j] = value;
-                sb.append(value + " ");
-                if (blocks[i][j] != (i * dimension + j + 1) && blocks[i][j] != 0) {
+                if (value == 0) {
+                    sb.append("   ");
+                } else {
+                    sb.append(String.format("%3d", value));
+                    manhattan += stepBetween(i, j, value);
+                }
+                if ((value - 1)!= (i * dimension + j) && value != 0) {
                     isGoal = false;
                     hamming++;
                 }
@@ -39,64 +46,7 @@ public class Board {
         twinBlocks[0][1] = tmp;
         string = sb.toString();
 
-        neighborNode = new BoardNode();
-        int zeroRow = 0, zeroColum = 0;
 
-        for (int i = 0; i < dimension; i++) {
-            for (int j = 0; j < dimension; j++) {
-                if (blocks[i][j] == 0) {
-                    zeroRow = i;
-                    zeroColum = j;
-                }
-            }
-        }
-
-        BoardNode currentNode = neighborNode;
-        int zeroRow_n = zeroRow - 1;
-        int zeroColum_n = zeroColum;
-        int[][] newBlocks = blocksFromCurrentBoard();
-
-        if (zeroRow_n > 0) {
-            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
-            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
-            currentNode.value = new Board(newBlocks);
-            currentNode.next = new BoardNode();
-            currentNode = currentNode.next;
-            newBlocks = blocksFromCurrentBoard();
-        }
-
-        zeroRow_n = zeroRow;
-        zeroColum_n = zeroColum - 1;
-
-        if (zeroColum_n > 0) {
-            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
-            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
-            currentNode.value = new Board(newBlocks);
-            currentNode.next = new BoardNode();
-            currentNode = currentNode.next;
-            newBlocks = blocksFromCurrentBoard();
-        }
-
-        zeroRow_n = zeroRow + 1;
-        zeroColum_n = zeroColum;
-
-        if (zeroRow_n < dimension) {
-            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
-            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
-            currentNode.value = new Board(newBlocks);
-            currentNode.next = new BoardNode();
-            currentNode = currentNode.next;
-            newBlocks = blocksFromCurrentBoard();
-        }
-
-        zeroRow_n = zeroRow;
-        zeroColum_n = zeroColum_n + 1;
-
-        if (zeroColum_n < dimension) {
-            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
-            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
-            currentNode.value = new Board(newBlocks);
-        }
 
     }
 
@@ -141,6 +91,10 @@ public class Board {
 
     public Iterable<Board> neighbors() {
 
+        if (neighborNode == null) {
+            generateNeighbors();
+        }
+
         return new Iterable<Board>() {
             public BoardNode currentNode = neighborNode;
 
@@ -169,12 +123,105 @@ public class Board {
         };
     }
 
+    private void generateNeighbors() {
+
+        neighborNode = new BoardNode();
+        int zeroRow = 0, zeroColum = 0;
+
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (blocks[i][j] == 0) {
+                    zeroRow = i;
+                    zeroColum = j;
+                }
+            }
+        }
+
+        BoardNode currentNode = neighborNode;
+        int zeroRow_n = zeroRow - 1;
+        int zeroColum_n = zeroColum;
+        int[][] newBlocks = blocksFromCurrentBoard();
+
+        if (zeroRow_n >= 0) {
+            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
+            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
+            currentNode.value = new Board(newBlocks);
+            currentNode.next = new BoardNode();
+            currentNode = currentNode.next;
+            newBlocks = blocksFromCurrentBoard();
+        }
+
+        zeroRow_n = zeroRow;
+        zeroColum_n = zeroColum - 1;
+
+        if (zeroColum_n >= 0) {
+            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
+            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
+            currentNode.value = new Board(newBlocks);
+            currentNode.next = new BoardNode();
+            currentNode = currentNode.next;
+            newBlocks = blocksFromCurrentBoard();
+        }
+
+        zeroRow_n = zeroRow + 1;
+        zeroColum_n = zeroColum;
+
+        if (zeroRow_n < dimension) {
+            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
+            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
+            currentNode.value = new Board(newBlocks);
+            currentNode.next = new BoardNode();
+            currentNode = currentNode.next;
+            newBlocks = blocksFromCurrentBoard();
+        }
+
+        zeroRow_n = zeroRow;
+        zeroColum_n = zeroColum_n + 1;
+
+        if (zeroColum_n < dimension) {
+            newBlocks[zeroRow_n][zeroColum_n] = blocks[zeroRow][zeroColum];
+            newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
+            currentNode.value = new Board(newBlocks);
+
+        }
+    }
+
     public String toString() {
         return string;
     }
 
+    private int stepBetween(int i, int j, int value) {
+        int result = 0;
+
+        int j_t = (value - 1) % dimension;
+        int i_t = (value - 1) / dimension;
+
+        result = Math.abs(i_t - i) + Math.abs(j_t - j);
+
+        return result;
+    }
 
     public static void main(String[] args) {
+
+        In in = new In(args[0]);
+        int n = in.readInt();
+        int[][] blocks = new int[n][n];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++) {
+                blocks[i][j] = in.readInt();
+            }
+
+        Board initial = new Board(blocks);
+
+        System.out.println(initial.toString());
+
+        System.out.println("hamming:" + initial.hamming() + " manhattan:" + initial.manhattan());
+
+        if (initial.isGoal()) {
+            System.out.println("is goal");
+        } else {
+            System.out.println("not goal");
+        }
 
     }
 
