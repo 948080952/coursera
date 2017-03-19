@@ -13,6 +13,7 @@ public class FastCollinearPoints {
     public FastCollinearPoints(Point[] points) {
 
         int length = points.length;
+
         Point[] sortedPoint = new Point[length];
 
         for (int i = 0; i < length; i++) {
@@ -29,7 +30,11 @@ public class FastCollinearPoints {
             Arrays.sort(sortedPoint, origin.slopeOrder());
 
             int startIndex = 1;
-            double slope = origin.slopeTo(sortedPoint[startIndex]);
+            double slope = 0;
+
+            if (length > 1) {
+                slope = origin.slopeTo(sortedPoint[startIndex]);
+            }
 
             validateSlope(slope);
 
@@ -88,11 +93,6 @@ public class FastCollinearPoints {
         }
         segments = realSegments;
 
-//        Point origin = points[59];
-//        Arrays.sort(sortedPoint, origin.slopeOrder());
-//        for (Point point : sortedPoint) {
-//            System.out.println(point.x + "," + point.y);
-//        }
     }
 
     public int numberOfSegments() {
