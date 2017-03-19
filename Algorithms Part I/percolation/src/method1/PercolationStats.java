@@ -1,11 +1,16 @@
+package method1;
+
+/**
+ * Created by daipei on 2017/3/19.
+ */
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdRandom;
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class PercolationStats {
-    
     private double mean;
     private double stddev;
     private double confidenceLo;
@@ -49,19 +54,19 @@ public class PercolationStats {
         this.confidenceLo = this.mean - change;
         this.confidenceHi = this.mean + change;
     }
-    
+
     public double mean() {
         return this.mean;
     }
-    
+
     public double stddev() {
         return this.stddev;
     }
-    
+
     public double confidenceLo() {
         return this.confidenceLo;
     }
-    
+
     public double confidenceHi() {
         return this.confidenceHi;
     }
@@ -71,7 +76,7 @@ public class PercolationStats {
             throw new IllegalArgumentException("the n or trials should bigger than zero");
         }
     }
-    
+
     public static void main(String[] args) {
         int n = StdIn.readInt();
         int trails = StdIn.readInt();
@@ -79,8 +84,8 @@ public class PercolationStats {
         System.out.println("mean                    = " + percolationStats.mean);
         System.out.println("stddev                  = " + percolationStats.stddev);
         System.out.println("95% confidence interval = [" +
-                        percolationStats.confidenceLo + ", " +
-                        percolationStats.confidenceHi + "]");
+                percolationStats.confidenceLo + ", " +
+                percolationStats.confidenceHi + "]");
 
     }
 }

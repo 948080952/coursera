@@ -1,6 +1,13 @@
+package method1;
+
+/**
+ * Created by daipei on 2017/3/19.
+ */
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
+
     private int[] openState;
     private int openCount;
     private WeightedQuickUnionUF grid;
