@@ -116,20 +116,23 @@ public class Board {
     public boolean equals(Object y) {
 
         if (y == null) {
-            throw new java.lang.NullPointerException();
+            return false;
         }
 
-        Board that = (Board) y;
-        if (this.dimension() == that.dimension()) {
-            for (int i = 0; i < dimension; i++) {
-                for (int j = 0; j < dimension; j++) {
-                    if (this.blocks[i][j] != that.blocks[i][j]) {
-                        return false;
+        if (y.getClass() == Board.class) {
+            Board that = (Board) y;
+            if (this.dimension() == that.dimension()) {
+                for (int i = 0; i < dimension; i++) {
+                    for (int j = 0; j < dimension; j++) {
+                        if (this.blocks[i][j] != that.blocks[i][j]) {
+                            return false;
+                        }
                     }
                 }
+                return true;
             }
-            return true;
         }
+
         return false;
     }
 
