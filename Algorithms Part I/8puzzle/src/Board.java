@@ -9,9 +9,7 @@ public class Board {
 
     private int[][] blocks;
     private int dimension;
-    private int hamming = 0;
     private int manhattan = 0;
-    private boolean isGoal = true;
 
     public Board(int[][] blocks) {
 
@@ -28,12 +26,7 @@ public class Board {
                 if (value != 0) {
                     manhattan += stepBetween(i, j, value);
                 }
-                if ((value - 1)!= (i * dimension + j) && value != 0) {
-                    isGoal = false;
-                    hamming++;
-                }
             }
-
         }
 
     }
@@ -58,6 +51,18 @@ public class Board {
     }
 
     public int hamming() {
+
+        int hamming = 0;
+
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                int value = blocks[i][j];
+                if ((value - 1)!= (i * dimension + j) && value != 0) {
+                    hamming++;
+                }
+            }
+        }
+
         return hamming;
     }
 
@@ -66,7 +71,15 @@ public class Board {
     }
 
     public boolean isGoal() {
-        return isGoal;
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                int value = blocks[i][j];
+                if ((value - 1)!= (i * dimension + j) && value != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public Board twin() {
