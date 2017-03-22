@@ -107,31 +107,41 @@ public class Solver {
     }
 
     public int moves() {
-        return totalMoves;
+        if (isSolvable()) {
+            return totalMoves;
+        } else {
+            return -1;
+        }
+
     }
 
     public Iterable<Board> solution() {
-        return new Iterable<Board>() {
-            @Override
-            public Iterator<Board> iterator() {
+        if (isSolvable()) {
+            return new Iterable<Board>() {
+                @Override
+                public Iterator<Board> iterator() {
 
-                return new Iterator<Board>() {
-                    private int a = totalMoves + 1;
+                    return new Iterator<Board>() {
+                        private int a = totalMoves + 1;
 
-                    @Override
-                    public boolean hasNext() {
-                        return a > 0;
-                    }
+                        @Override
+                        public boolean hasNext() {
+                            return a > 0;
+                        }
 
-                    @Override
-                    public Board next() {
-                        if (!hasNext())
-                            throw new java.util.NoSuchElementException();
-                        return solutions[--a];
-                    }
-                };
-            }
-        };
+                        @Override
+                        public Board next() {
+                            if (!hasNext())
+                                throw new java.util.NoSuchElementException();
+                            return solutions[--a];
+                        }
+                    };
+                }
+            };
+        } else {
+            return null;
+        }
+
     }
 
     private boolean validateBoard(Board board, SearchNode node) {
