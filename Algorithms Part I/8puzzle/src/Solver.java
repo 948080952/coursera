@@ -59,7 +59,7 @@ public class Solver {
 
         while (!delNode1.board.isGoal() && !delNode2.board.isGoal()) {
 
-            System.out.println(delNode1.board.toString());
+//            System.out.println(delNode1.board.toString());
 
             for (Board board :
                     delNode1.board.neighbors()) {
@@ -84,7 +84,6 @@ public class Solver {
             delNode2 = priorityQueue2.delMin();
             trashNode2.pTrash = delNode2;
             trashNode2 = trashNode2.pTrash;
-
         }
         SearchNode resultNode;
         if (delNode1.board.isGoal()) {
