@@ -109,6 +109,10 @@ public class Board {
 
     public boolean equals(Object y) {
 
+        if (y == null) {
+            throw new java.lang.NullPointerException();
+        }
+
         Board that = (Board) y;
         if (this.dimension() == that.dimension()) {
             for (int i = 0; i < dimension; i++) {
