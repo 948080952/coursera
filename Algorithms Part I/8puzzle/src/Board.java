@@ -29,6 +29,8 @@ public class Board {
 
         int zeroI = 0, zeroJ = 0;
 
+        sb.append(dimension + "\n");
+
         twinBlocks = new int[dimension][dimension];
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
@@ -37,11 +39,10 @@ public class Board {
                 if (value == 0) {
                     zeroI = i;
                     zeroJ = j;
-                    sb.append("   ");
                 } else {
-                    sb.append(String.format("%3d", value));
                     manhattan += stepBetween(i, j, value);
                 }
+                sb.append(String.format("%2d", value) + " ");
                 if ((value - 1)!= (i * dimension + j) && value != 0) {
                     isGoal = false;
                     hamming++;
