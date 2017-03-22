@@ -18,10 +18,16 @@ public class Board {
 
     public Board(int[][] blocks) {
 
+        if (blocks == null) {
+            throw new java.lang.NullPointerException();
+        }
+
         this.blocks = blocks;
         this.dimension = blocks.length;
 
         StringBuilder sb = new StringBuilder();
+
+        int zeroI = 0, zeroJ = 0;
 
         twinBlocks = new int[dimension][dimension];
         for (int i = 0; i < dimension; i++) {
@@ -29,6 +35,8 @@ public class Board {
                 int value = blocks[i][j];
                 twinBlocks[i][j] = value;
                 if (value == 0) {
+                    zeroI = i;
+                    zeroJ = j;
                     sb.append("   ");
                 } else {
                     sb.append(String.format("%3d", value));
@@ -41,12 +49,25 @@ public class Board {
             }
             sb.append("\n");
         }
-        int tmp = twinBlocks[0][0];
-        twinBlocks[0][0] = twinBlocks[0][1];
-        twinBlocks[0][1] = tmp;
+
+        int i1 = zeroI, j1 = 0, i2 = 0, j2 = zeroJ;
+
+        if (zeroJ != 0) {
+            j1 = zeroJ - 1;
+        } else {
+            j1 = zeroJ + 1;
+        }
+
+        if (zeroI != 0) {
+            i2 = zeroI - 1;
+        } else {
+            i2 = zeroI + 1;
+        }
+
+        int tmp = twinBlocks[i1][j1];
+        twinBlocks[i1][j1] = twinBlocks[i2][j2];
+        twinBlocks[i2][j2] = tmp;
         string = sb.toString();
-
-
 
     }
 
@@ -86,6 +107,18 @@ public class Board {
     }
 
     public boolean equals(Object y) {
+
+        Board that = (Board) y;
+        if (this.dimension() == that.dimension()) {
+            for (int i = 0; i < dimension; i++) {
+                for (int j = 0; j < dimension; j++) {
+                    if (this.blocks[i][j] != that.blocks[i][j]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         return false;
     }
 
@@ -103,8 +136,10 @@ public class Board {
                 return new Iterator<Board>() {
                     @Override
                     public boolean hasNext() {
-                        if (currentNode.value != null) {
-                            return true;
+                        if (currentNode != null) {
+                            if (currentNode.value != null) {
+                                return true;
+                            }
                         }
                         return false;
                     }
@@ -112,7 +147,7 @@ public class Board {
                     @Override
                     public Board next() {
                         if (!hasNext()) {
-                            throw new java.util.NoSuchElementException();
+                            throw new java.util.NoSuchElementException("the next is null");
                         }
                         Board item = currentNode.value;
                         currentNode = currentNode.next;
@@ -228,7 +263,5 @@ public class Board {
                 initial.neighbors()) {
             System.out.println(board.toString());
         }
-
     }
-
 }
