@@ -13,8 +13,6 @@ public class Board {
     private int hamming = 0;
     private int manhattan = 0;
     private boolean isGoal = true;
-    private String string;
-    private BoardNode neighborNode;
 
     public Board(int[][] blocks) {
 
@@ -25,11 +23,9 @@ public class Board {
         this.blocks = blocks;
         this.dimension = blocks.length;
 
-        StringBuilder sb = new StringBuilder();
+
 
         int zeroI = 0, zeroJ = 0;
-
-        sb.append(dimension + "\n");
 
         twinBlocks = new int[dimension][dimension];
         for (int i = 0; i < dimension; i++) {
@@ -42,13 +38,13 @@ public class Board {
                 } else {
                     manhattan += stepBetween(i, j, value);
                 }
-                sb.append(String.format("%2d", value) + " ");
+
                 if ((value - 1)!= (i * dimension + j) && value != 0) {
                     isGoal = false;
                     hamming++;
                 }
             }
-            sb.append("\n");
+
         }
 
         int i1 = zeroI, j1 = 0, i2 = 0, j2 = zeroJ;
@@ -68,7 +64,7 @@ public class Board {
         int tmp = twinBlocks[i1][j1];
         twinBlocks[i1][j1] = twinBlocks[i2][j2];
         twinBlocks[i2][j2] = tmp;
-        string = sb.toString();
+
 
     }
 
@@ -129,9 +125,7 @@ public class Board {
 
     public Iterable<Board> neighbors() {
 
-        if (neighborNode == null) {
-            generateNeighbors();
-        }
+        BoardNode neighborNode = generateNeighbors();
 
         return new Iterable<Board>() {
             public BoardNode currentNode = neighborNode;
@@ -163,9 +157,9 @@ public class Board {
         };
     }
 
-    private void generateNeighbors() {
+    private BoardNode generateNeighbors() {
 
-        neighborNode = new BoardNode();
+        BoardNode neighborNode = new BoardNode();
         int zeroRow = 0, zeroColum = 0;
 
         for (int i = 0; i < dimension; i++) {
@@ -223,9 +217,26 @@ public class Board {
             newBlocks[zeroRow][zeroColum] = blocks[zeroRow_n][zeroColum_n];
             currentNode.value = new Board(newBlocks);
         }
+        return neighborNode;
     }
 
     public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(dimension + "\n");
+
+        for (int i = 0; i < dimension; i++) {
+
+            for (int j = 0; j < dimension; j++) {
+                int value = blocks[i][j];
+                sb.append(String.format("%2d", value) + " ");
+            }
+            sb.append("\n");
+        }
+
+        String string = sb.toString();
+
         return string;
     }
 
