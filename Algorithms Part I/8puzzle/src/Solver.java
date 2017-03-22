@@ -94,9 +94,9 @@ public class Solver {
             resultNode = delNode2;
         }
         totalMoves = resultNode.moves;
-        solutions = new Board[totalMoves];
+        solutions = new Board[totalMoves + 1];
         SearchNode pNode = resultNode;
-        for (int i = 0; i < totalMoves; i++) {
+        for (int i = 0; i <= totalMoves; i++) {
             solutions[i] = pNode.board;
             pNode = pNode.previous;
         }
@@ -116,7 +116,7 @@ public class Solver {
             public Iterator<Board> iterator() {
 
                 return new Iterator<Board>() {
-                    private int a = totalMoves;
+                    private int a = totalMoves + 1;
 
                     @Override
                     public boolean hasNext() {
