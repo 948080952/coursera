@@ -8,7 +8,6 @@ import edu.princeton.cs.algs4.In;
 public class Board {
 
     private int[][] blocks;
-    private int[][] twinBlocks;
     private int dimension;
     private int hamming = 0;
     private int manhattan = 0;
@@ -23,22 +22,12 @@ public class Board {
         this.blocks = blocks;
         this.dimension = blocks.length;
 
-
-
-        int zeroI = 0, zeroJ = 0;
-
-        twinBlocks = new int[dimension][dimension];
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 int value = blocks[i][j];
-                twinBlocks[i][j] = value;
-                if (value == 0) {
-                    zeroI = i;
-                    zeroJ = j;
-                } else {
+                if (value != 0) {
                     manhattan += stepBetween(i, j, value);
                 }
-
                 if ((value - 1)!= (i * dimension + j) && value != 0) {
                     isGoal = false;
                     hamming++;
@@ -46,25 +35,6 @@ public class Board {
             }
 
         }
-
-        int i1 = zeroI, j1 = 0, i2 = 0, j2 = zeroJ;
-
-        if (zeroJ != 0) {
-            j1 = zeroJ - 1;
-        } else {
-            j1 = zeroJ + 1;
-        }
-
-        if (zeroI != 0) {
-            i2 = zeroI - 1;
-        } else {
-            i2 = zeroI + 1;
-        }
-
-        int tmp = twinBlocks[i1][j1];
-        twinBlocks[i1][j1] = twinBlocks[i2][j2];
-        twinBlocks[i2][j2] = tmp;
-
 
     }
 
@@ -100,7 +70,34 @@ public class Board {
     }
 
     public Board twin() {
-        return new Board(twinBlocks);
+
+        int i0 = 0, j0 = 0, i1 = 0, j1 = 0;
+
+        int[][] twinBlock = blocksFromCurrentBoard();
+
+        if (twinBlock[0][0] != 0) {
+            i0 = 0;
+            j0 = 0;
+            if (twinBlock[1][0] != 0) {
+                i1 = 1;
+                j1 = 0;
+            } else {
+                i1 = 0;
+                j1 = 1;
+            }
+        } else {
+            i0 = 0;
+            j0 = 1;
+            i1 = 1;
+            j1 = 0;
+        }
+
+        int tmp = twinBlock[i0][j0];
+        twinBlock[i0][j0] = twinBlock[i1][j1];
+        twinBlock[i1][j1] = tmp;
+
+        return new Board(twinBlock);
+
     }
 
     public boolean equals(Object y) {
