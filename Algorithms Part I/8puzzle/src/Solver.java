@@ -16,7 +16,6 @@ public class Solver {
     private class SearchNode implements Comparable{
         Board board;
         SearchNode previous;
-        SearchNode pTrash;
         int priority;
         int moves;
         public SearchNode(Board board, SearchNode previous, int moves) {
@@ -54,8 +53,6 @@ public class Solver {
         SearchNode delNode1 = firstNode;
         SearchNode delNode2 = firstPair;
 
-        SearchNode trashNode1 = delNode1;
-        SearchNode trashNode2 = delNode2;
 
         while (!delNode1.board.isGoal() && !delNode2.board.isGoal()) {
 
@@ -63,27 +60,28 @@ public class Solver {
 
             for (Board board :
                     delNode1.board.neighbors()) {
-                if (!validateBoard(board, firstNode)) {
-                    continue;
+
+                if (delNode1.previous != null) {
+                    if (board.equals(delNode1.previous.board)) {
+                        continue;
+                    }
                 }
                 SearchNode node = new SearchNode(board, delNode1, delNode1.moves + 1);
                 priorityQueue1.insert(node);
             }
             delNode1 = priorityQueue1.delMin();
-            trashNode1.pTrash = delNode1;
-            trashNode1 = trashNode1.pTrash;
 
             for (Board board :
                     delNode2.board.neighbors()) {
-                if (!validateBoard(board, firstPair)) {
-                    continue;
+                if (delNode2.previous != null) {
+                    if (board.equals(delNode2.previous.board)) {
+                        continue;
+                    }
                 }
                 SearchNode node = new SearchNode(board, delNode2, delNode2.moves + 1);
                 priorityQueue2.insert(node);
             }
             delNode2 = priorityQueue2.delMin();
-            trashNode2.pTrash = delNode2;
-            trashNode2 = trashNode2.pTrash;
         }
         SearchNode resultNode;
         if (delNode1.board.isGoal()) {
@@ -142,18 +140,6 @@ public class Solver {
             return null;
         }
 
-    }
-
-    private boolean validateBoard(Board board, SearchNode node) {
-
-        SearchNode pNode = node;
-        while (pNode != null) {
-            if (board.equals(pNode.board)) {
-                return false;
-            }
-            pNode = pNode.pTrash;
-        }
-        return true;
     }
 
     public static void main(String[] args) {
