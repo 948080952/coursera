@@ -13,7 +13,7 @@ public class Solver {
     private boolean solvable;
     private Board[] solutions;
 
-    private class SearchNode implements Comparable{
+    private class SearchNode implements Comparable<SearchNode> {
         Board board;
         SearchNode previous;
         int priority;
@@ -27,8 +27,7 @@ public class Solver {
         }
 
         @Override
-        public int compareTo(Object o) {
-            SearchNode that = (SearchNode) o;
+        public int compareTo(SearchNode that) {
             if (this.priority > that.priority) {
                 return 1;
             } else if (this.priority < that.priority) {
