@@ -3,6 +3,9 @@
  */
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
+
+import java.awt.*;
 
 public class KdTree {
 
@@ -118,6 +121,84 @@ public class KdTree {
 
     public void draw() {
 
+        RectHV border = new RectHV(0, 0, 1, 1);
+        drawCore(rootNode, null, border);
+
+    }
+
+    private void drawCore(TreeNode child, TreeNode parent, RectHV border) {
+
+        if (child == null) {
+            return;
+        }
+
+        StdDraw.setPenColor(Color.BLACK);
+        StdDraw.setPenRadius(0.01);
+        child.point.draw();
+
+        Point2D point1 = null, point2 = null;
+        RectHV leftBorder = null;
+        RectHV rightBorder = null;
+
+        StdDraw.setPenRadius();
+        if (parent == null) {
+
+            double x = child.point.x();
+            point1 = new Point2D(x, border.ymin());
+            point2 = new Point2D(x, border.ymax());
+
+            StdDraw.setPenColor(Color.red);
+
+            leftBorder = new RectHV(border.xmin(), border.ymin(), child.point.x(), border.ymax());
+            rightBorder = new RectHV(child.point.x(), border.ymin(), border.xmax(), border.ymax());
+
+        } else {
+
+            if (parent.isVertical) {
+
+                double x1 = parent.point.x();
+                double y1 = child.point.y();
+                double x2 = 0, y2 = y1;
+
+                if (child.point.x() < parent.point.x()) {
+                    x2 = border.xmin();
+                } else {
+                    x2 = border.xmax();
+                }
+                point1 = new Point2D(x1, y1);
+                point2 = new Point2D(x2, y2);
+
+                StdDraw.setPenColor(Color.blue);
+
+                leftBorder = new RectHV(border.xmin(), border.ymin(), border.xmax(), child.point.y());
+                rightBorder = new RectHV(border.xmin(), child.point.y(), border.xmax(), border.ymax());
+
+            } else {
+
+                double x1 = child.point.x();
+                double y1 = parent.point.y();
+                double x2 = x1, y2 = 0;
+
+                if (child.point.y() < parent.point.y()) {
+                    y2 = border.ymin();
+                } else {
+                    y2 = border.ymax();
+                }
+                point1 = new Point2D(x1, y1);
+                point2 = new Point2D(x2, y2);
+
+                StdDraw.setPenColor(Color.red);
+
+                leftBorder = new RectHV(border.xmin(), border.ymin(), child.point.x(), border.ymax());
+                rightBorder = new RectHV(child.point.x(), border.ymin(), border.xmax(), border.ymax());
+            }
+        }
+
+        point1.drawTo(point2);
+
+        drawCore(child.left, child, leftBorder);
+        drawCore(child.right, child, rightBorder);
+
     }
 
     public Iterable<Point2D> range(RectHV rect) {
@@ -126,11 +207,11 @@ public class KdTree {
     }
 
     public Point2D nearest(Point2D p) {
-        
+
         return null;
     }
 
     public static void main(String[] args) {
-
+        
     }
 }
