@@ -5,27 +5,21 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.SET;
-import java.lang.Math;
 
 public class PointSET {
 
     private SET<Point2D> point2DS;
-    private int size;
 
     public PointSET() {
         point2DS = new SET<>();
-        size = 0;
     }
 
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return point2DS.isEmpty();
     }
 
     public int size() {
-        return size;
+        return point2DS.size();
     }
 
     public void insert(Point2D p) {
@@ -33,13 +27,7 @@ public class PointSET {
     }
 
     public boolean contains(Point2D p) {
-        for (Point2D point :
-                point2DS) {
-            if (point.equals(p)) {
-                return true;
-            }
-        }
-        return false;
+        return point2DS.contains(p);
     }
 
     public void draw() {
