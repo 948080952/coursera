@@ -248,7 +248,53 @@ public class KdTree {
 
     public Point2D nearest(Point2D p) {
 
+
+
         return null;
+    }
+
+    private Point2D findNearest(Point2D p, TreeNode node) {
+
+        Point2D point1 = node.point;
+        Point2D point2 = node.point;
+
+        if (node.isVertical) {
+
+            if (p.x() <= node.point.x() && node.left != null) {
+                point1 = findNearest(p, node.left);
+            } else if (p.x() > node.point.x()  && node.right != null) {
+                point1 = findNearest(p, node.right);
+            }
+
+            if (p.distanceSquaredTo(point1) > p.distanceTo(new Point2D(node.point.x(), p.y()))) {
+
+                if (p.x() > node.point.x() && node.left != null) {
+                    point2 = findNearest(p, node.left);
+                } else if (p.x() <= node.point.x()  && node.right != null) {
+                    point2 = findNearest(p, node.right);
+                }
+            }
+
+        } else {
+
+            if (p.y() <= node.point.y() && node.left != null) {
+                point1 = findNearest(p, node.left);
+            } else if (p.y() > node.point.y() && node.right != null) {
+                point1 = findNearest(p, node.right);
+            }
+
+            if (p.distanceTo(point1) > p.distanceTo(new Point2D(p.x(), node.point.y()))) {
+
+                if (p.y() > node.point.y() && node.left != null) {
+                    point2 = findNearest(p, node.left);
+                } else if (p.y() <= node.point.y() && node.right != null) {
+                    point2 = findNearest(p, node.right);
+                }
+            }
+
+        }
+
+        return p.distanceTo(point1) < p.distanceTo(point2) ? point1 : point2;
     }
 
     public static void main(String[] args) {
