@@ -4,6 +4,7 @@
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.SET;
 
 import java.awt.*;
 
@@ -203,8 +204,47 @@ public class KdTree {
 
     public Iterable<Point2D> range(RectHV rect) {
 
-        return null;
+        SET<Point2D> range = new SET<>();
+
+        rangeSearch(rect, rootNode, range);
+
+        return range;
     }
+
+    private void rangeSearch(RectHV rect, TreeNode node, SET<Point2D> range) {
+
+        if (node == null) {
+            return;
+        }
+
+        if (rect.contains(node.point)) {
+            range.add(node.point);
+        }
+
+        if (node.isVertical) {
+
+            if (rect.xmin() <= node.point.x()) {
+                rangeSearch(rect, node.left, range);
+            }
+
+            if (rect.xmax() > node.point.x()) {
+                rangeSearch(rect, node.right, range);
+            }
+
+        } else {
+
+            if (rect.ymin() <= node.point.y()) {
+                rangeSearch(rect, node.left, range);
+            }
+
+            if (rect.ymax() > node.point.y()) {
+                rangeSearch(rect, node.right, range);
+            }
+
+        }
+
+    }
+
 
     public Point2D nearest(Point2D p) {
 
@@ -212,6 +252,6 @@ public class KdTree {
     }
 
     public static void main(String[] args) {
-        
+
     }
 }
