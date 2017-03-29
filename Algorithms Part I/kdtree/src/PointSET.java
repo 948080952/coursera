@@ -55,17 +55,15 @@ public class PointSET {
     public Point2D nearest(Point2D p) {
 
         Point2D nearestPoint = null;
-        double minDistance = 0;
 
         for (Point2D point :
                 point2DS) {
-            double distance = p.distanceTo(point);
-            if (distance < minDistance) {
-                nearestPoint = point;
-            }
             if (nearestPoint == null) {
                 nearestPoint = point;
-                minDistance = p.distanceTo(nearestPoint);
+                continue;
+            }
+            if (p.distanceTo(point) < p.distanceTo(nearestPoint)) {
+                nearestPoint = point;
             }
         }
         return nearestPoint;
