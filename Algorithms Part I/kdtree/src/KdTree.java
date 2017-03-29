@@ -247,10 +247,7 @@ public class KdTree {
 
 
     public Point2D nearest(Point2D p) {
-
-
-
-        return null;
+        return findNearest(p, rootNode);
     }
 
     private Point2D findNearest(Point2D p, TreeNode node) {
