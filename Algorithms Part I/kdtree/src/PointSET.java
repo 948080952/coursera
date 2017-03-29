@@ -63,6 +63,10 @@ public class PointSET {
             if (distance < minDistance) {
                 nearestPoint = point;
             }
+            if (nearestPoint == null) {
+                nearestPoint = point;
+                minDistance = p.distanceTo(nearestPoint);
+            }
         }
         return nearestPoint;
     }
