@@ -27,12 +27,15 @@ sigma = zeros(1, size(X, 2));
 %       
 
 
-
-
-
-
-
-
+n = length(mu);
+for i = 1:n
+    mu(i) = sum(X(:, i)) / size(X, 1);
+    sigma(i) = max(X(:, i)) - min(X(:, i));
+    if sigma(i) == 0,
+        sigma(i) = 1;
+    end
+    X_norm(:, i) = (X(:, i) - mu(i)) / sigma(i);
+end
 
 % ============================================================
 
