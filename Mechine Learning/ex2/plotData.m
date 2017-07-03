@@ -12,13 +12,17 @@ figure; hold on;
 %               examples and 'ko' for the negative examples.
 %
 
+n = length(y);
+for i = 1 : n
+    if y(i) == 1
+        P(i, :) = X(i, :);
+    elseif y(i) == 0
+        N(i, :) = X(i, :);
+    end
+end
 
-
-
-
-
-
-
+plot(P(:, 1), P(:, 2), 'k+');
+plot(N(:, 1), N(:, 2), 'ko');
 
 % =========================================================================
 

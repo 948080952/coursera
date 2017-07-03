@@ -20,13 +20,13 @@ grad = zeros(size(theta));
 % Note: grad should have the same dimensions as theta
 %
 
+J = - sum(log(1 ./ (1 + exp(- X * theta))) .* y + log(1 - 1 ./ (1 + exp(- X * theta))) .* (1 - y)) / m;
 
-
-
-
-
-
-
+n = length(theta);
+for i = 1:n
+    grad(i, 1) = - sum(X(:, i) .* y ./ ((1 + exp(X * theta)) .* log(exp(1))) + (y - 1) .* X(:, i) ./ ((1 + exp(X * theta)) .* log(exp(1)) .* exp(- X * theta))) / m;
+end
+    
 % =============================================================
 
 end
