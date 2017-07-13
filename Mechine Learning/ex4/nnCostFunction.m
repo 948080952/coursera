@@ -62,23 +62,39 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% Cost Function
+X = [ones(m, 1) X];
+Z2 = X * Theta1';
+A2 = 1 ./ (1 + exp(-Z2));
+A2 = [ones(m, 1) A2];
+Z3 = A2 * Theta2';
+A3 = 1 ./ (1 + exp(-Z3));
 
+y1 = [1:num_labels];
+Y = zeros(m, num_labels);
 
+for i = 1:num_labels
+    Y = Y + (double(y==i) * double(y1==i));
+end
 
+Theta_t1 = Theta1(:,2:size(Theta1, 2));
+Theta_t2 = Theta2(:,2:size(Theta2, 2));
 
+J = sum(sum(- Y .* log(A3) - (1 - Y) .* log(1 - A3))) / m +...
+    lambda * (sum(sum(Theta_t1.^2)) + sum(sum(Theta_t2.^2))) / (2 * m);
 
+% gradients
 
+delta_3 = A3 - Y; % 5000 * 10
+delta_2 = delta_3 * Theta_t2 .* sigmoidGradient(Z2); % 5000 * 25
 
+A1 = X;
 
+Theta_t1 = [zeros(size(Theta_t1, 1), 1) Theta_t1];
+Theta_t2 = [zeros(size(Theta_t2, 1), 1) Theta_t2];
 
-
-
-
-
-
-
-
-
+Theta1_grad = delta_2' * A1 / m + lambda * Theta_t1 / m;
+Theta2_grad = delta_3' * A2 / m + lambda * Theta_t2 / m;
 
 % -------------------------------------------------------------
 
