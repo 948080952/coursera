@@ -8,8 +8,9 @@ import edu.princeton.cs.algs4.In;
 import java.util.*;
 
 public class WordNet {
-    private Digraph wordGraph;
     private HashMap<String, HashSet<Integer>> idMap;
+    private ArrayList<String> wordIndex;
+    private SAP sap;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
@@ -18,18 +19,20 @@ public class WordNet {
             throw new java.lang.IllegalArgumentException();
         }
 
-        int count = initIdMap(synsets);
+        int count = initFromSynsets(synsets);
 
-        initWordGraph(hypernyms, count);
+        initFromHypernyms(hypernyms, count);
 
     }
 
-    private int initIdMap(String synsets) {
-        idMap = new HashMap<>();
+    private int initFromSynsets(String synsets) {
+        this.idMap = new HashMap<>();
+        this.wordIndex = new ArrayList<>();
         In synIn = new In(synsets);
         int count = 0;
         while (synIn.hasNextLine()) {
             String[] argvs = synIn.readLine().split(",");
+            wordIndex.add(argvs[1]);
             String[] words = argvs[1].split(" ");
             int id = Integer.parseInt(argvs[0]);
             for (String word : words) {
@@ -47,8 +50,8 @@ public class WordNet {
         return count;
     }
 
-    private void initWordGraph(String hypernyms, int count) {
-        wordGraph = new Digraph(count);
+    private void initFromHypernyms(String hypernyms, int count) {
+        Digraph wordGraph = new Digraph(count);
         In hypIn = new In(hypernyms);
         while (hypIn.hasNextLine()) {
             String[] points = hypIn.readLine().split(",");
@@ -56,6 +59,7 @@ public class WordNet {
                 wordGraph.addEdge(Integer.parseInt(points[0]), Integer.parseInt(points[i]));
             }
         }
+        this.sap = new SAP(wordGraph);
     }
 
     // returns all WordNet nouns
@@ -76,7 +80,9 @@ public class WordNet {
         if (nounA == null || nounB == null || !isNoun(nounA) || !isNoun(nounB)) {
             throw new java.lang.IllegalArgumentException();
         }
-        return 0;
+        Iterable<Integer> v = idMap.get(nounA);
+        Iterable<Integer> w = idMap.get(nounB);
+        return sap.length(v, w);
     }
 
     // a synset that is the common ancestor of nounA and nounB
@@ -84,7 +90,10 @@ public class WordNet {
         if (nounA == null || nounB == null || !isNoun(nounA) || !isNoun(nounB)) {
             throw new java.lang.IllegalArgumentException();
         }
-        return "";
+        Iterable<Integer> v = idMap.get(nounA);
+        Iterable<Integer> w = idMap.get(nounB);
+        int ancestor = sap.ancestor(v, w);
+        return wordIndex.get(ancestor);
     }
 
     // do unit testing of this class
