@@ -21,7 +21,7 @@ public class SAP {
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
         if (!isValidId(v) || !isValidId(w)) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IndexOutOfBoundsException();
         }
         BreadthFirstDirectedPaths p1 = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths p2 = new BreadthFirstDirectedPaths(digraph, w);
@@ -43,7 +43,7 @@ public class SAP {
     // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v, int w) {
         if (!isValidId(v) || !isValidId(w)) {
-            throw new java.lang.IllegalArgumentException();
+            throw new java.lang.IndexOutOfBoundsException();
         }
         BreadthFirstDirectedPaths p1 = new BreadthFirstDirectedPaths(digraph, v);
         BreadthFirstDirectedPaths p2 = new BreadthFirstDirectedPaths(digraph, w);
@@ -68,12 +68,12 @@ public class SAP {
         }
         for (Integer i : v) {
             if (!isValidId(i)) {
-                throw new java.lang.IllegalArgumentException();
+                throw new java.lang.IndexOutOfBoundsException();
             }
         }
         for (Integer i : w) {
             if (!isValidId(i)) {
-                throw new java.lang.IllegalArgumentException();
+                throw new java.lang.IndexOutOfBoundsException();
             }
         }
         BreadthFirstDirectedPaths p1 = new BreadthFirstDirectedPaths(digraph, v);
