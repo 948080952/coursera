@@ -100,12 +100,12 @@ public class SAP {
         }
         for (Integer i : v) {
             if (!isValidId(i)) {
-                throw new java.lang.IllegalArgumentException();
+                throw new java.lang.IndexOutOfBoundsException();
             }
         }
         for (Integer i : w) {
             if (!isValidId(i)) {
-                throw new java.lang.IllegalArgumentException();
+                throw new java.lang.IndexOutOfBoundsException();
             }
         }
         BreadthFirstDirectedPaths p1 = new BreadthFirstDirectedPaths(digraph, v);
