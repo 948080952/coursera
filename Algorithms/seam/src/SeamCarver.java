@@ -4,9 +4,12 @@
 
 import edu.princeton.cs.algs4.Picture;
 
+import java.awt.*;
+
 public class SeamCarver {
 
     private Picture picture;
+    private static double BORDER_ENERGY = 1000;
 
     public SeamCarver(Picture picture) {
         this.picture = picture;
@@ -27,8 +30,19 @@ public class SeamCarver {
     public double energy(int x, int y) {
         validateCol(x);
         validateRow(y);
-
-        return 0;
+        if (isBorder(x, y)) {
+            return BORDER_ENERGY;
+        }
+        Color left = picture.get(x - 1, y);
+        Color top = picture.get(x, y - 1);
+        Color focus = picture.get(x, y);
+        double d1 = Math.pow(focus.getRed() - left.getRed(), 2);
+        double d2 = Math.pow(focus.getGreen() - left.getGreen(), 2);
+        double d3 = Math.pow(focus.getBlue() - left.getBlue(), 2);
+        double d4 = Math.pow(focus.getRed() - top.getRed(), 2);
+        double d5 = Math.pow(focus.getGreen() - top.getGreen(), 2);
+        double d6 = Math.pow(focus.getBlue() - top.getBlue(), 2);
+        return Math.sqrt(d1 + d2 + d3 + d4 + d5 + d6);
     }
 
     public int[] findHorizontalSeam() {
