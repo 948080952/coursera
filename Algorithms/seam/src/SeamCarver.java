@@ -60,9 +60,9 @@ public class SeamCarver {
         if (isBorder(x, y)) {
             return BORDER_ENERGY;
         }
-        Color left = picture.get(x - 1, y);
-        Color top = picture.get(x, y - 1);
-        Color focus = picture.get(x, y);
+        Color left = new Color(colorInfo.get(x - 1).get(y));
+        Color top = new Color(colorInfo.get(x).get(y - 1));
+        Color focus = new Color(colorInfo.get(x).get(y));
         double d1 = Math.pow(focus.getRed() - left.getRed(), 2);
         double d2 = Math.pow(focus.getGreen() - left.getGreen(), 2);
         double d3 = Math.pow(focus.getBlue() - left.getBlue(), 2);
