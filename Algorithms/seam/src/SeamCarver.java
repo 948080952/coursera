@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class SeamCarver {
 
-    private Picture picture;
     private static double BORDER_ENERGY = 1000;
     private ArrayList<ArrayList<Integer>> colorInfo;
     private int width;
@@ -20,7 +19,6 @@ public class SeamCarver {
         if (picture == null) {
             throw new IllegalArgumentException();
         }
-        this.picture = new Picture(picture);
         width = picture.width();
         height = picture.height();
         colorInfo = new ArrayList<>();
@@ -34,13 +32,10 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        if (picture.width() != width || picture.height() != height) {
-            updatePicture();
-        }
-        return picture;
+        return updatePicture();
     }
 
-    private void updatePicture() {
+    private Picture updatePicture() {
         Picture carvedPic = new Picture(width, height);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -48,7 +43,7 @@ public class SeamCarver {
                 carvedPic.set(i, j, color);
             }
         }
-        picture = carvedPic;
+        return carvedPic;
     }
 
     public int width() {
