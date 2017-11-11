@@ -4,8 +4,8 @@
 
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.awt.*;
+import edu.princeton.cs.algs4.Stopwatch;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class SeamCarver {
@@ -17,6 +17,9 @@ public class SeamCarver {
     private int height;
 
     public SeamCarver(Picture picture) {
+        if (picture == null) {
+            throw new IllegalArgumentException();
+        }
         this.picture = picture;
         width = picture.width();
         height = picture.height();
@@ -45,6 +48,7 @@ public class SeamCarver {
                 carvedPic.set(i, j, color);
             }
         }
+        picture = carvedPic;
     }
 
     public int width() {
@@ -166,7 +170,10 @@ public class SeamCarver {
 
     private int[] neighbor(int key, boolean vertical) {
         int[] neighbor;
-        if (key == 0) {
+        if ((vertical && width == 1) || (!vertical && height == 1)) {
+            neighbor = new int[1];
+            neighbor[0] = key;
+        } else if (key == 0) {
             neighbor = new int[2];
             neighbor[0] = key;
             neighbor[1] = key + 1;
@@ -236,55 +243,37 @@ public class SeamCarver {
         return false;
     }
 
-    private static final boolean HORIZONTAL   = true;
-    private static final boolean VERTICAL     = false;
-
-    private static void printSeam(SeamCarver carver, int[] seam, boolean direction) {
-        double totalSeamEnergy = 0.0;
-
-        for (int row = 0; row < carver.height(); row++) {
-            for (int col = 0; col < carver.width(); col++) {
-                double energy = carver.energy(col, row);
-                String marker = " ";
-                if ((direction == HORIZONTAL && row == seam[col]) ||
-                        (direction == VERTICAL   && col == seam[row])) {
-                    marker = "*";
-                    totalSeamEnergy += energy;
-                }
-                StdOut.printf("%7.2f%s ", energy, marker);
-            }
-            StdOut.println();
-        }
-        // StdOut.println();
-        StdOut.printf("Total energy = %f\n", totalSeamEnergy);
-        StdOut.println();
-        StdOut.println();
-    }
-
     public static void main(String[] args) {
-        Picture picture = new Picture(args[0]);
-        StdOut.printf("%s (%d-by-%d image)\n", args[0], picture.width(), picture.height());
-        StdOut.println();
-        StdOut.println("The table gives the dual-gradient energies of each pixel.");
-        StdOut.println("The asterisks denote a minimum energy vertical or horizontal seam.");
-        StdOut.println();
+        if (args.length != 3) {
+            StdOut.println("Usage:\njava ResizeDemo [image filename] [num cols to remove] [num rows to remove]");
+            return;
+        }
 
-        SeamCarver carver = new SeamCarver(picture);
+        Picture inputImg = new Picture(args[0]);
+        int removeColumns = Integer.parseInt(args[1]);
+        int removeRows = Integer.parseInt(args[2]);
 
-        StdOut.printf("Vertical seam: { ");
-        int[] verticalSeam = carver.findVerticalSeam();
-        for (int x : verticalSeam)
-            StdOut.print(x + " ");
-        StdOut.println("}");
-        printSeam(carver, verticalSeam, VERTICAL);
+        StdOut.printf("image is %d columns by %d rows\n", inputImg.width(), inputImg.height());
+        SeamCarver sc = new SeamCarver(inputImg);
 
-        StdOut.printf("Horizontal seam: { ");
-        int[] horizontalSeam = carver.findHorizontalSeam();
-        for (int y : horizontalSeam)
-            StdOut.print(y + " ");
-        StdOut.println("}");
-        printSeam(carver, horizontalSeam, HORIZONTAL);
+        Stopwatch sw = new Stopwatch();
 
+        for (int i = 0; i < removeRows; i++) {
+            int[] horizontalSeam = sc.findHorizontalSeam();
+            sc.removeHorizontalSeam(horizontalSeam);
+        }
+
+        for (int i = 0; i < removeColumns; i++) {
+            int[] verticalSeam = sc.findVerticalSeam();
+            sc.removeVerticalSeam(verticalSeam);
+        }
+        Picture outputImg = sc.picture();
+
+        StdOut.printf("new image size is %d columns by %d rows\n", sc.width(), sc.height());
+
+        StdOut.println("Resizing time: " + sw.elapsedTime() + " seconds.");
+        inputImg.show();
+        outputImg.show();
     }
 
 }
