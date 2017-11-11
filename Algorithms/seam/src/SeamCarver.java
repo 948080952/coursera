@@ -197,6 +197,7 @@ public class SeamCarver {
         for (int row : seam) {
             validateRow(row);
         }
+        validateSeam(seam);
         for (int i = 0; i < width; i++) {
             int target = seam[i];
             colorInfo.get(i).remove(target);
@@ -211,6 +212,7 @@ public class SeamCarver {
         for (int col : seam) {
             validateCol(col);
         }
+        validateSeam(seam);
         for (int i = 0; i < width - 1; i++) {
             for (int j = 0; j < height; j++) {
                 int target = seam[j];
@@ -222,6 +224,14 @@ public class SeamCarver {
         }
         width--;
         colorInfo.remove(width);
+    }
+
+    private void validateSeam(int[] seam) {
+        for (int i = 1; i < seam.length; i++) {
+           if (Math.abs(seam[i] - seam[i - 1]) > 1) {
+               throw new IllegalArgumentException();
+           }
+        }
     }
 
     private void validateRow(int row) {
