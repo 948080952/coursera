@@ -20,7 +20,7 @@ public class SeamCarver {
         if (picture == null) {
             throw new IllegalArgumentException();
         }
-        this.picture = picture;
+        this.picture = new Picture(picture);
         width = picture.width();
         height = picture.height();
         colorInfo = new ArrayList<>();
