@@ -4,7 +4,7 @@
 
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.Stopwatch;
+
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -72,69 +72,85 @@ public class SeamCarver {
     public int[] findHorizontalSeam() {
         int[] seams;
         int[][] edgeTo = new int[width][height];
-        double[][] energyMatrix = energyMatrix();
+        double[] weight1 = weight(false);
+        double[] weight2 = new double[height];
         for (int i = 1; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                relax(i, j, edgeTo, energyMatrix, false);
+                relax(i, j, edgeTo, weight1, weight2, false);
             }
+            double[] tmp = weight1;
+            weight1 = weight2;
+            weight2 = tmp;
         }
-        seams = seam(edgeTo, energyMatrix, false);
+        seams = seam(edgeTo, weight1, false);
         return seams;
     }
 
     public int[] findVerticalSeam() {
         int[] seams;
         int[][] edgeTo = new int[width][height];
-        double[][] energyMatrix = energyMatrix();
+        double[] weight1 = weight(true);
+        double[] weight2 = new double[width];
         for (int j = 1; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                relax(i, j, edgeTo, energyMatrix, true);
+                relax(i, j, edgeTo, weight1, weight2, true);
             }
+            double[] tmp = weight1;
+            weight1 = weight2;
+            weight2 = tmp;
         }
-        seams = seam(edgeTo, energyMatrix, true);
+        seams = seam(edgeTo, weight1, true);
         return seams;
     }
 
-    private double[][] energyMatrix() {
-        double[][] energy = new double[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                energy[i][j] = energy(i, j);
+    private double[] weight(boolean vertical) {
+        int length = vertical ? width : height;
+        double[] matirx = new double[length];
+        if (vertical) {
+            for (int i = 0; i < length; i++) {
+                matirx[i] = energy(i, 0);
+            }
+        } else {
+            for (int j = 0; j < length; j++) {
+                matirx[j] = energy(0, j);
             }
         }
-        return energy;
+        return matirx;
     }
 
-    private void relax(int x, int y, int[][] edgeTo, double[][] energyMatrix, boolean vertical) {
+    private void relax(int x, int y, int[][] edgeTo, double[] weight1, double[] weight2, boolean vertical) {
         double minEnergy = Double.MAX_VALUE;
         int neighborID = 0;
         int[] neighbors = neighbor(vertical ? x : y, vertical);
         if (vertical) {
             for (int id : neighbors) {
-                if (energyMatrix[id][y - 1] < minEnergy) {
-                    minEnergy = energyMatrix[id][y - 1];
+                double en = weight1[id];
+                if (en < minEnergy) {
+                    minEnergy = en;
                     neighborID = id;
                 }
             }
+            weight2[x] = energy(x, y) + minEnergy;
         } else {
             for (int id : neighbors) {
-                if (energyMatrix[x - 1][id] < minEnergy) {
-                    minEnergy = energyMatrix[x - 1][id];
+                double en = weight1[id];
+                if (en < minEnergy) {
+                    minEnergy = en;
                     neighborID = id;
                 }
             }
+            weight2[y] = energy(x, y) + minEnergy;
         }
-        energyMatrix[x][y] += minEnergy;
         edgeTo[x][y] = neighborID;
     }
 
-    private int[] seam(int[][] edgeTo, double[][] energyMatrix, boolean vertical) {
+    private int[] seam(int[][] edgeTo, double[] energyMatrix, boolean vertical) {
         int[] seam;
         int index = 0;
         if (vertical) {
             seam = new int[height];
             for (int i = 1; i < width; i++) {
-                if (energyMatrix[i][height - 1] < energyMatrix[index][height - 1]) {
+                if (energyMatrix[i] < energyMatrix[index]) {
                     index = i;
                 }
             }
@@ -146,7 +162,7 @@ public class SeamCarver {
         } else  {
             seam = new int[width];
             for (int j = 1; j < height; j++) {
-                if (energyMatrix[width - 1][j] < energyMatrix[width - 1][index]) {
+                if (energyMatrix[j] < energyMatrix[index]) {
                     index = j;
                 }
             }
@@ -250,37 +266,56 @@ public class SeamCarver {
         return false;
     }
 
+    private static final boolean HORIZONTAL   = true;
+    private static final boolean VERTICAL     = false;
+
+    private static void printSeam(SeamCarver carver, int[] seam, boolean direction) {
+        double totalSeamEnergy = 0.0;
+
+        for (int row = 0; row < carver.height(); row++) {
+            for (int col = 0; col < carver.width(); col++) {
+                double energy = carver.energy(col, row);
+                String marker = " ";
+                if ((direction == HORIZONTAL && row == seam[col]) ||
+                        (direction == VERTICAL   && col == seam[row])) {
+                    marker = "*";
+                    totalSeamEnergy += energy;
+                }
+                StdOut.printf("%7.2f%s ", energy, marker);
+            }
+            StdOut.println();
+        }
+        // StdOut.println();
+        StdOut.printf("Total energy = %f\n", totalSeamEnergy);
+        StdOut.println();
+        StdOut.println();
+    }
+
     public static void main(String[] args) {
-        if (args.length != 3) {
-            StdOut.println("Usage:\njava ResizeDemo [image filename] [num cols to remove] [num rows to remove]");
-            return;
-        }
+        Picture picture = new Picture(args[0]);
+        StdOut.printf("%s (%d-by-%d image)\n", args[0], picture.width(), picture.height());
+        StdOut.println();
+        StdOut.println("The table gives the dual-gradient energies of each pixel.");
+        StdOut.println("The asterisks denote a minimum energy vertical or horizontal seam.");
+        StdOut.println();
 
-        Picture inputImg = new Picture(args[0]);
-        int removeColumns = Integer.parseInt(args[1]);
-        int removeRows = Integer.parseInt(args[2]);
+        SeamCarver carver = new SeamCarver(picture);
 
-        StdOut.printf("image is %d columns by %d rows\n", inputImg.width(), inputImg.height());
-        SeamCarver sc = new SeamCarver(inputImg);
+        StdOut.printf("Vertical seam: { ");
+        int[] verticalSeam = carver.findVerticalSeam();
+        for (int x : verticalSeam)
+            StdOut.print(x + " ");
+        StdOut.println("}");
+        printSeam(carver, verticalSeam, VERTICAL);
 
-        Stopwatch sw = new Stopwatch();
+        StdOut.printf("Horizontal seam: { ");
+        int[] horizontalSeam = carver.findHorizontalSeam();
+        for (int y : horizontalSeam)
+            StdOut.print(y + " ");
+        StdOut.println("}");
 
-        for (int i = 0; i < removeRows; i++) {
-            int[] horizontalSeam = sc.findHorizontalSeam();
-            sc.removeHorizontalSeam(horizontalSeam);
-        }
+        printSeam(carver, horizontalSeam, HORIZONTAL);
 
-        for (int i = 0; i < removeColumns; i++) {
-            int[] verticalSeam = sc.findVerticalSeam();
-            sc.removeVerticalSeam(verticalSeam);
-        }
-        Picture outputImg = sc.picture();
-
-        StdOut.printf("new image size is %d columns by %d rows\n", sc.width(), sc.height());
-
-        StdOut.println("Resizing time: " + sw.elapsedTime() + " seconds.");
-        inputImg.show();
-        outputImg.show();
     }
 
 }
