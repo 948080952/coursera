@@ -191,6 +191,9 @@ public class SeamCarver {
     }
 
     public void removeHorizontalSeam(int[] seam) {
+        if (seam == null) {
+            throw new IllegalArgumentException();
+        }
         if (seam.length != width) {
             throw new IllegalArgumentException();
         }
@@ -206,6 +209,9 @@ public class SeamCarver {
     }
 
     public void removeVerticalSeam(int[] seam) {
+        if (seam == null) {
+            throw new IllegalArgumentException();
+        }
         if (seam.length != height) {
             throw new IllegalArgumentException();
         }
