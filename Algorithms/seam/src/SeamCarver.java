@@ -32,10 +32,6 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        return updatePicture();
-    }
-
-    private Picture updatePicture() {
         Picture carvedPic = new Picture(width, height);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
