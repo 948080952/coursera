@@ -2,7 +2,13 @@
  * Created by daipei on 2017/11/13.
  */
 
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.ST;
+import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.FlowNetwork;
+import edu.princeton.cs.algs4.FordFulkerson;
+import edu.princeton.cs.algs4.FlowEdge;
+import edu.princeton.cs.algs4.StdOut;
 
 public class BaseballElimination {
 
@@ -30,7 +36,7 @@ public class BaseballElimination {
         left = new int[n];
         schedule = new int[n][n];
         isEliminated = new boolean[n];
-        eliminations = new SET[n];
+        eliminations = (SET<String>[]) new SET[n];
 
         for (int i = 0; i < n; i++) {
             String teamName = in.readString();
