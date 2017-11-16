@@ -43,14 +43,9 @@ public class BaseballElimination {
                 schedule[i][j] = in.readInt();
             }
         }
-        System.out.println("teamMap: " + teamMap.size());
-        System.out.println("win: " + win.length);
-        System.out.println("loss: " + loss.length);
-        System.out.println("left: " + left.length);
-        System.out.println("schedule: " + schedule.length);
 
         trivialElimination();
-
+        nontrivialElimination();
     }
 
     private void trivialElimination() {
@@ -89,7 +84,7 @@ public class BaseballElimination {
                 if (i == team) {
                     continue;
                 }
-                for (int j = 0; j < teamNumber; j++) {
+                for (int j = i + 1; j < teamNumber; j++) {
                     if (j == team || j == i) {
                         continue;
                     }
@@ -164,11 +159,11 @@ public class BaseballElimination {
     }
 
     public boolean isEliminated(String team) {
-        return false;
+        return isEliminated[teamMap.get(team)];
     }
 
     public Iterable<String> certificateOfElimination(String team) {
-        return null;
+        return eliminations[teamMap.get(team)];
     }
 
     public static void main(String[] args) {
