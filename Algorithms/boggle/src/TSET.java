@@ -73,7 +73,7 @@ public class TSET {
         }
         if (c < x.c)                        x.left = insert(x.left, string, d);
         else if (c > x.c)                   x.right = insert(x.right, string, d);
-        else if (d < string.length() - 1)   x.mid = insert(x.mid,string, d + 1);
+        else if (d < string.length() - 1)   x.mid = insert(x.mid, string, d + 1);
         else                                x.isString = true;
         return x;
     }
