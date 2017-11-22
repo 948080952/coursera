@@ -8,7 +8,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class BoggleSolver {
 
-    private TSET allWords;
+    private final TSET allWords;
 
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
@@ -31,13 +31,20 @@ public class BoggleSolver {
 
     private void dfs(BoggleBoard board, StringBuilder string, SET<String> collecion, int x, int y, boolean[][] mark) {
         mark[x][y] = true;
+        boolean isQ = board.getLetter(x, y) == 'Q';
         string.append(board.getLetter(x, y));
+        if (isQ) {
+            string.append('U');
+        }
         if (!allWords.containPrefix(string.toString())) {
             string.deleteCharAt(string.length() - 1);
+            if (isQ) {
+                string.deleteCharAt(string.length() - 1);
+            }
             mark[x][y] = false;
             return;
         }
-        if (allWords.contain(string.toString())) {
+        if (allWords.contain(string.toString()) && string.length() >= 3) {
             collecion.add(string.toString());
         }
         int w = board.cols(), h = board.rows();
@@ -75,6 +82,9 @@ public class BoggleSolver {
             dfs(board, string, collecion, x1, y1, mark);
         }
         string.deleteCharAt(string.length() - 1);
+        if (isQ) {
+            string.deleteCharAt(string.length() - 1);
+        }
         mark[x][y] = false;
     }
 
