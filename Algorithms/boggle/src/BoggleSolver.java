@@ -20,9 +20,9 @@ public class BoggleSolver {
     public Iterable<String> getAllValidWords(BoggleBoard board) {
         SET<String> validWords = new SET<>();
         boolean[][] mark;
-        for (int i = 0; i < board.cols(); i++) {
-            for (int j = 0; j < board.rows(); j++) {
-                mark = new boolean[board.cols()][board.rows()];
+        for (int i = 0; i < board.rows(); i++) {
+            for (int j = 0; j < board.cols(); j++) {
+                mark = new boolean[board.rows()][board.cols()];
                 dfs(board, new StringBuilder(), validWords, i, j, mark);
             }
         }
@@ -47,7 +47,7 @@ public class BoggleSolver {
         if (allWords.contain(string.toString()) && string.length() >= 3) {
             collecion.add(string.toString());
         }
-        int w = board.cols(), h = board.rows();
+        int w = board.rows(), h = board.cols();
         int x1, y1 = y;
         x1 = x - 1;
         if (x1 >= 0 && !mark[x1][y1]) {
